@@ -11,7 +11,7 @@ module.exports = {
             console.log('register error', error);
             if (error.code === 11000) {//11000 means that this is a repeated value and cannot used for another account
                 res.status(403).json({
-                    message: 'that email address was already registered'
+                    message: 'This email is already used'
                 })
             }
         }
@@ -19,12 +19,12 @@ module.exports = {
 
     async loginUser(req, res) {
         const user = await User.findOne({
-            email: req.body.email
+            email: req.body.email//email field
         });
 
         if (!user) {
             return res.status(403).json({
-                message: 'a user with that email cannot be found'
+                message: 'Email is not associated with an account'
             });
         }
 
@@ -32,22 +32,32 @@ module.exports = {
             user: user
         })
     },
-
+    
     async getSingleUser(req, res) {
         const user = await User.findById(req.params.user_id).populate('thoughts');
-
         res.json(user);
     },
 
     async getAllUsers(req, res) {
         const users = await User.find().populate('thoughts');
-
         res.json(users);
+    },
+
+    async updateUser(req, res) {
+        try {
+            const updatedUser = await User.findByIdAndUpdate(req.params.user_id, req.body, { new: true });
+            if (!updatedUser) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            res.json(updatedUser);
+        } catch (error) {
+            console.log('updateUser error', error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
     },
 
     async deleteUser(req, res) {
         const user = await User.findById(req.params.user_id);
-
         await user.deleteOne();
         res.json({
             message: 'user deleted'

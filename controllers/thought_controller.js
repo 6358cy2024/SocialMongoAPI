@@ -29,9 +29,23 @@ module.exports = {
 
         res.json(thought);
     },
+
+    async updateThought(req, res) {
+        try {
+            const updatedThought = await Thought.findByIdAndUpdate(req.params.thought_id, req.body, { new: true });
+            if (!updatedThought) {
+                return res.status(404).json({ message: 'Thought not found' });
+            }
+            res.json({
+                message: 'Thought Updated',
+                thought: updatedThought
+            });
+        } catch (error) {
+            res.status(500).json({ message: 'Error updating thought', error: error.message });
+        }
+    },
     async deleteThought(req, res) {
         const thought = await Thought.findById(req.params.thought_id);
-
         await thought.deleteOne();
 
         res.json({
