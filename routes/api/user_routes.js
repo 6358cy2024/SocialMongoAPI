@@ -19,11 +19,5 @@ router.put('/user/:id', user_controller.updateUser)
 //DELETE
 router.delete('/user/:user_id', user_controller.deleteUser)
 
-// /api/users/:userId
-router.route('/:userId').get(getSingleUser).delete(deleteUser).put(updateUser);
-
-// /api/users/:userId/friends/:friendId
-router.route("/:userId/friends/:friendId").post(addFriend).delete(removeFriend);
-
 
 module.exports = router;

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const thought_controller = require('../../controllers/thoughts_controller');
+const thought_controller = require('../../controllers/thought_controller');
 
 //GET all
 router.get('/thoughts', thought_controller.getAllThoughts)
